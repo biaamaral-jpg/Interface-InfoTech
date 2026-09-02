@@ -1,129 +1,310 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import ProdutoRequests from '../../../fetch/ProdutoRequest';
+import React, { useState } from "react";
+import ProdutoRequests from "../../../fetch/ProdutoRequest";
 
-function FormProduto() {
-    const navigate = useNavigate();
-
-    const [formData, setFormData] = useState<any>({
-        nomeProduto: '',
-        preco: '',
-        disponibilidade: '',
-    });
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev: any) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-       
-        const resposta = await ProdutoRequests.enviarFormularioProduto(formData);
-
-        if (resposta) {
-            alert("Produto cadastrado com sucesso");
-        } else {
-            alert("Erro ao cadastrar produto");
-        }
-    };
-
-    return (
-        <main className="bg-gray-100 flex-1 py-8 sm:py-12 px-4 sm:px-6 lg:px-8 overflow-y-auto">
-            <div className="max-w-3xl mx-auto">
-
-                <form
-                    onSubmit={handleSubmit}
-                    className="bg-white shadow-2xl rounded-2xl p-6 sm:p-10 border border-slate-200"
-                >
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl text-center font-bold text-slate-800 mb-8 sm:mb-12">
-                        Cadastro de Produto
-                    </h1>
-
-                    <div className="space-y-6 sm:space-y-8">
-
-                        <div className="flex flex-col sm:flex-row gap-6">
-
-                            <div className="flex-1">
-                                <label htmlFor="nomeProduto" className="block text-sm font-semibold text-slate-700 mb-2">
-                                    Nome do Produto
-                                </label>
-                                <input
-                                    type="text"
-                                    name="nomeProduto"
-                                    id="nomeProduto"
-                                    required
-                                    minLength={3}
-                                    onChange={handleChange}
-                                    placeholder="Digite o nome"
-                                    className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-slate-500 focus:outline-none transition-all placeholder:text-slate-400"
-                                />
-                            </div>
-
-                            <div className="flex-1">
-                                <label htmlFor="preco" className="block text-sm font-semibold text-slate-700 mb-2">
-                                    Preço
-                                </label>
-                                <input
-                                    type="number"
-                                    name="preco"
-                                    id="preco"
-                                    required
-                                    min="0"
-                                    step="0.01"
-                                    onChange={handleChange}
-                                    placeholder="R$ 0,00"
-                                    className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-slate-500 focus:outline-none transition-all placeholder:text-slate-400"
-                                />
-                            </div>
-
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-6">
-
-                            <div className="flex-1">
-                                <label htmlFor="disponibilidade" className="block text-sm font-semibold text-slate-700 mb-2">
-                                    Disponibilidade
-                                </label>
-                                <input
-                                    type="text"
-                                    name="disponibilidade"
-                                    id="disponibilidade"
-                                    minLength={6}
-                                    onChange={handleChange}
-                                    placeholder="Disponível, Indisponível"
-                                    className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:border-slate-500 focus:outline-none transition-all placeholder:text-slate-400"
-                                />
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <div className="mt-10 sm:mt-14 space-y-4">
-
-                        <input
-                            type="submit"
-                            value="CADASTRAR PRODUTO"
-                            className="w-full bg-slate-800 text-white py-4 rounded-xl font-bold text-lg cursor-pointer hover:bg-slate-700 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
-                        />
-
-                        <button
-                            type="button"
-                            onClick={() => navigate('/lista/produto')}
-                            className="w-full bg-white border-2 border-slate-300 text-slate-600 py-4 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all active:scale-[0.98]"
-                        >
-                            VOLTAR PARA LISTAGEM
-                        </button>
-
-                    </div>
-
-                </form>
-
-            </div>
-        </main>
-    );
+interface IProduto {
+  id_produto: number;
+  id_categoria: number;
+  codigo: string;
+  nome: string;
+  descricao: string;
+  preco_unitario: number;
+  quantidade_disponivel: number;
+  quantidade_minima: number;
+  ativo: boolean;
 }
 
-export default FormProduto;
+interface FormProdutoProps {
+  produtos?: IProduto[];
+  onSuccess?: () => void;
+}
+
+interface FormData {
+  id_categoria: number;
+  codigo: string;
+  nome: string;
+  descricao: string;
+  preco_unitario: string | number;
+  quantidade_disponivel: string | number;
+  quantidade_minima: string | number;
+  ativo: boolean;
+}
+
+export default function FormProduto({ produtos = [], onSuccess }: FormProdutoProps) {
+  const [formData, setFormData] = useState<FormData>({
+    id_categoria: 1,
+    codigo: "",
+    nome: "",
+    descricao: "",
+    preco_unitario: "",
+    quantidade_disponivel: "",
+    quantidade_minima: "",
+    ativo: true,
+  });
+  const [erroTela, setErroTela] = useState<string | null>(null);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+
+    let val: string | number | boolean = value;
+
+    if (type === "checkbox") {
+      val = (e.target as HTMLInputElement).checked;
+    } else if (type === "number") {
+      val = value === "" ? "" : Number(value);
+    } else if (name === "id_categoria") {
+      val = Number(value);
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: val,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Formulário enviado:", formData);
+    setErroTela(null);
+
+    if (!formData.codigo.trim() || !formData.nome.trim()) {
+      const erroValidacao = "Por favor, preencha o Código e o Nome do produto.";
+      console.error("Erro de validação:", erroValidacao, formData);
+      setErroTela(`Erro ao cadastrar: ${erroValidacao}`);
+      return;
+    }
+
+    const precoInformado = String(formData.preco_unitario)
+      .replace(/R\$\s*/g, "")
+      .replace(",", ".");
+    const payload = {
+      ...formData,
+      idCategoria: Number(formData.id_categoria),
+      preco_unitario: Number(precoInformado),
+      quantidade_disponivel: Number(formData.quantidade_disponivel),
+      quantidade_minima: Number(formData.quantidade_minima),
+    };
+
+    try {
+      console.log("Payload enviado:", payload);
+      const resposta = await ProdutoRequests.criar(payload);
+      console.log("Resposta do servidor:", resposta);
+
+      if (!resposta) {
+        throw new Error(
+          "O servidor recusou o cadastro. Verifique se o Código do produto já existe no banco!"
+        );
+      }
+
+      alert("Produto cadastrado com sucesso!");
+      setFormData({
+        id_categoria: 1,
+        codigo: "",
+        nome: "",
+        descricao: "",
+        preco_unitario: "",
+        quantidade_disponivel: "",
+        quantidade_minima: "",
+        ativo: true,
+      });
+
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.error("Erro ao cadastrar produto:", error);
+      const erroApi = error as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+      setErroTela(
+        "Erro ao cadastrar: " +
+        (erroApi.response?.data?.message || erroApi.message || "Erro desconhecido")
+      );
+    }
+  };
+
+  return (
+    <div>
+      <div className="product-form-wrapper">
+        <div className="product-form-card">
+          <h2>Cadastro de Produtos</h2>
+
+          {erroTela && (
+            <div className="product-form-error">
+              {erroTela}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit}>
+            <div className="product-form-section">
+              <div className="product-form-group">
+                <label>Categoria:</label>
+                <select
+                  name="id_categoria"
+                  value={formData.id_categoria}
+                  onChange={handleChange}
+                >
+                  <option value={1}>Periféricos</option>
+                  <option value={2}>Hardware</option>
+                </select>
+              </div>
+
+              <div className="product-form-group">
+                <label>Código:</label>
+                <input
+                  type="text"
+                  name="codigo"
+                  value={formData.codigo}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="product-form-section full">
+              <div className="product-form-group">
+                <label>Nome do produto:</label>
+                <input
+                  type="text"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="product-form-section full">
+              <div className="product-form-group">
+                <label>Descrição:</label>
+                <textarea
+                  name="descricao"
+                  value={formData.descricao}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
+            <div className="product-form-section">
+              <div className="product-form-group">
+                <label>Preço unitário (R$):</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  name="preco_unitario"
+                  value={formData.preco_unitario}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      preco_unitario: e.target.value === "" ? "" : parseFloat(e.target.value),
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="product-form-group">
+                <label>Quantidade disponível:</label>
+                <input
+                  type="number"
+                  name="quantidade_disponivel"
+                  value={formData.quantidade_disponivel}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      quantidade_disponivel: e.target.value === "" ? "" : parseInt(e.target.value, 10),
+                    })
+                  }
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="product-form-section">
+              <div className="product-form-group">
+                <label>Quantidade mínima:</label>
+                <input
+                  type="number"
+                  name="quantidade_minima"
+                  value={formData.quantidade_minima}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      quantidade_minima: e.target.value === "" ? "" : parseInt(e.target.value, 10),
+                    })
+                  }
+                  required
+                />
+              </div>
+
+              <div className="product-form-group">
+                <label>Status:</label>
+                <select
+                  name="ativo"
+                  value={formData.ativo ? "1" : "0"}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      ativo: e.target.value === "1",
+                    })
+                  }
+                >
+                  <option value="1">Ativo</option>
+                  <option value="0">Inativo</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="product-form-actions">
+              <button
+                type="submit"
+                className="product-btn-submit"
+              >
+                Cadastrar Produto
+              </button>
+              <button
+                type="reset"
+                className="product-btn-reset"
+                onClick={() =>
+                  setFormData({
+                    id_categoria: 1,
+                    codigo: "",
+                    nome: "",
+                    descricao: "",
+                    preco_unitario: "",
+                    quantidade_disponivel: "",
+                    quantidade_minima: "",
+                    ativo: true,
+                  })
+                }
+              >
+                Limpar
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Exibição da Lista */}
+      {produtos.length > 0 && (
+        <section className="produtos-cadastrados">
+          <h3>Produtos Cadastrados ({produtos.length})</h3>
+          <div className="produtos-grid">
+            {produtos.map((item, index) => (
+              <div key={item.id_produto || index} className="product-card">
+                <h4>{item.nome}</h4>
+                <p><strong>Código:</strong> {item.codigo}</p>
+                <p>{item.descricao || "Sem descrição."}</p>
+                <div className="product-card-price">R$ {Number(item.preco_unitario || 0).toFixed(2)}</div>
+                <p><strong>Estoque:</strong> {item.quantidade_disponivel ?? 0} un.</p>
+                <p><strong>Mínimo:</strong> {item.quantidade_minima ?? 0} un.</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </div>
+  );
+}

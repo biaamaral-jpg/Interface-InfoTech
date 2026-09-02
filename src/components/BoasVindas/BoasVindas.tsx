@@ -2,56 +2,12 @@ import { type JSX } from "react";
 
 function BoasVindas(): JSX.Element {
     return (
-        <section style={{ 
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '4rem 2rem',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            gap: '2rem',
-            minHeight: '70vh'
-        }}>
-            {/* Lado Esquerdo: Textos */}
-            <div style={{ flex: 1, textAlign: 'left' }}>
-                <h1 style={{ 
-                    color: '#000', 
-                    fontSize: '3.5rem', 
-                    fontWeight: 'bold',
-                    lineHeight: '1.1',
-                    marginBottom: '1.5rem' 
-                }}>
-                    Bem-vindo ao <span style={{ color: '#000' }}>InfoTech</span>
-                </h1>
-                <p style={{ 
-                    fontSize: '1.25rem', 
-                    color: '#333', 
-                    lineHeight: '1.6',
-                    maxWidth: '500px'
-                }}>
-                   Produtos de informática de alta qualidade, com atendimento 
-                    <strong> presenciais e por vídeo</strong> com total segurança.
+        <section style={{ padding: '48px 16px' }}>
+            <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+                <h1 style={{ fontSize: '2.4rem', margin: '24px 0 12px', color: 'var(--text-h)' }}>Loja de Informática Infotech</h1>
+                <p style={{ fontSize: '1.05rem', color: 'var(--text)', margin: '0 auto', maxWidth: 780 }}>
+                    Seja bem-vindo à loja de informática Infotech. Aqui você encontra produtos de alta qualidade e serviços excepcionais.
                 </p>
-                <p style={{ 
-                    color: '#666', 
-                    marginTop: '1.5rem',
-                    fontSize: '1.1rem' 
-                }}>
-                    Os melhores produtos para você.
-                </p>
-            </div>
-
-            {/* Lado Direito: Imagem */}
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', position: 'relative' }}>
-                <img 
-                    alt="infotech" 
-                    style={{ 
-                        width: '100%', 
-                        maxWidth: '500px', 
-                        height: 'auto',
-                        objectFit: 'contain'
-                    }} 
-                />
             </div>
         </section>
     );

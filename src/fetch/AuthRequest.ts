@@ -10,10 +10,10 @@ class AuthRequests {
      * Construtor das rotas e do endereço do servidor
      */
     constructor() {
-        // endereço do servidor configurado via variável de ambiente
-        this.serverUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333';
-        // rota de autenticação configurada via variável de ambiente
-        this.endpointLogin = import.meta.env.VITE_LOGIN_ROUTE || '/api/login';
+        // endereço do servidor
+        this.serverUrl = 'http://localhost:3333';
+        // rota do servidor
+        this.endpointLogin = '/api/login';
     }
 
     /**
@@ -21,12 +21,9 @@ class AuthRequests {
      * @param {*} login - email e senha
      * @returns **true** caso sucesso, **false** caso erro
      */
-    async login(login: { email: string, senha: string}) {       
+    async login(login: { email: string, senha: string}): Promise<{ success: boolean, message?: string }> {
         try {
-            const url = `${this.serverUrl}${this.endpointLogin}`;
-            console.log('Fazendo login em:', url);
-
-            const response = await fetch(url, {
+            const response = await fetch(`${this.serverUrl}${this.endpointLogin}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -34,44 +31,53 @@ class AuthRequests {
                 body: JSON.stringify(login)
             });
 
-            const responseText = await response.text();
-            let data: any;
-
+            let data: any = null;
             try {
-                data = responseText ? JSON.parse(responseText) : {};
+                data = await response.json();
             } catch {
-                data = { message: responseText };
+                data = null;
             }
 
             if (!response.ok) {
-                console.error('Erro na autenticação', response.status, data);
-                throw new Error(data?.message || `Falha no login (${response.status})`);
+                const msg = data?.message || data?.error || `HTTP ${response.status}`;
+                console.log('Erro na autenticação', data);
+                return { success: false, message: msg };
             }
 
-            const successMessage = String(data?.message || '').toLowerCase();
-            const hasAuth = data?.auth === true;
-            const hasToken = !!data?.token;
-            const hasUsuario = !!data?.usuario;
-            const loginSucceeded = hasAuth || hasToken || hasUsuario || successMessage.includes('login') || successMessage.includes('sucesso');
+            const messageFromServer = typeof data?.message === 'string' ? data.message : undefined;
+            const tokenFromServer = data?.token || data?.access_token || data?.jwt || null;
+            const usuarioFromServer = data?.usuario || data?.user || data?.cliente || data?.usuarioLogado || null;
+            const authFlag = data?.auth ?? data?.authenticated ?? data?.isAuth ?? null;
 
-            if (!loginSucceeded) {
-                const message = data?.message || 'Autenticação negada pelo servidor';
-                throw new Error(message);
+            const isAuth = (
+                authFlag === true ||
+                authFlag === 'true' ||
+                Boolean(tokenFromServer) ||
+                (messageFromServer ? /sucesso|login realizado/i.test(messageFromServer) : false)
+            );
+
+            if (isAuth) {
+                const usuario = usuarioFromServer || {
+                    id_usuario: data?.id_usuario ?? data?.idUsuario ?? 0,
+                    nome: data?.nome || data?.name || 'Usuário',
+                    email: data?.email || login.email,
+                    role: data?.role || 'user'
+                };
+
+                if (tokenFromServer) {
+                    this.persistToken(tokenFromServer, usuario, true);
+                } else if (typeof authFlag === 'boolean' || authFlag === 'true') {
+                    this.persistToken('token-temporario', usuario, true);
+                }
+
+                return { success: true, message: messageFromServer || 'Login realizado com sucesso' };
             }
 
-            if (hasToken && hasUsuario) {
-                this.persistToken(data.token, data.usuario, true);
-            } else {
-                localStorage.setItem('isAuth', 'true');
-                localStorage.setItem('email', login.email);
-                localStorage.setItem('nome', login.email.split('@')[0]);
-                localStorage.setItem('role', 'usuario');
-            }
-
-            return true;
+            return { success: false, message: messageFromServer || data?.error || 'Credenciais inválidas' };
         } catch (error) {
             console.error('Erro: ', error);
-            throw error;
+            const message = error instanceof Error ? error.message : String(error);
+            return { success: false, message };
         }
     }
 
@@ -81,12 +87,17 @@ class AuthRequests {
      * @param {*} usuario - objeto com informações do usuário vindos do servidor
      * @param {*} isAuth - estado da autenticação do usuário
      */
-    persistToken(token: string, usuario: {id_usuario: number, nome: string, email: string, role: string}, isAuth: boolean) {
+    persistToken(token: string, usuario: {id_usuario?: number, nome?: string, email?: string, role?: string}, isAuth: boolean) {
+        const idUsuario = usuario.id_usuario ?? usuario.id_usuario ?? 0;
+        const nome = usuario.nome || 'Usuário';
+        const email = usuario.email || '';
+        const role = usuario.role || 'user';
+
         localStorage.setItem('token', token);
-        localStorage.setItem('nome', usuario.nome);
-        localStorage.setItem('idUsuario', usuario.id_usuario.toString());
-        localStorage.setItem('email', usuario.email);
-        localStorage.setItem('role', usuario.role);
+        localStorage.setItem('nome', nome);
+        localStorage.setItem('idUsuario', String(idUsuario));
+        localStorage.setItem('email', email);
+        localStorage.setItem('role', role);
         localStorage.setItem('isAuth', isAuth.toString());
     }
 
@@ -112,30 +123,24 @@ class AuthRequests {
      * @returns **true** caso token válido, **false** caso token inválido
      */
     checkTokenExpiry() {
-        // recupera o valor do token no localstorage
         const token = localStorage.getItem('token');
-        
-        // verifica se o valor é diferente de vazio
-        if (token) {
-            // recupera a data de expiração do token
+
+        if (!token) return false;
+
+        try {
             const payload = JSON.parse(atob(token.split('.')[1]));
-            // recuepra a hora de expiração do token
             const expiry = payload.exp;
-            // pega a data e hora atual
             const now = Math.floor(Date.now() / 1000);
 
-            // verifica se o token está expirado
             if (expiry < now) {
-                // invoca a função para remover o token do localstorage
                 this.removeToken();
-                // retorna false
                 return false;
             }
-            // caso o token não esteja expirado, retorna true
+
             return true;
+        } catch {
+            return Boolean(token);
         }
-        // caso o token esteja vazio, retorna false
-        return false;
     }
 }
 

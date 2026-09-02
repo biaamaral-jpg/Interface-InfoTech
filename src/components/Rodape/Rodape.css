@@ -1,10 +1,10 @@
 /* Rodape.css */
 .rodape-container {
-    background: linear-gradient(180deg, #2b170f 0%, #1d120d 100%);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 48px 6% 20px;
-    color: #f8d9b7;
-    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, rgba(17,24,39,0.98), rgba(15,23,42,0.98));
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding: 36px 6% 18px;
+    color: var(--text);
+    font-family: var(--sans);
 }
 
 .rodape-content {
@@ -23,8 +23,8 @@
 }
 
 .rodape-info h3 {
-    color: #fff3d9;
-    font-size: 1.3rem;
+    color: var(--text-h);
+    font-size: 1.25rem;
     font-weight: 700;
     margin-bottom: 10px;
     display: flex;
@@ -47,11 +47,11 @@
 }
 
 .rodape-links h4 {
-    color: #ffe7bd;
-    font-size: 0.8rem;
+    color: var(--text-h);
+    font-size: 0.85rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
 }
 
 .rodape-equipe {
@@ -62,38 +62,31 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    color: #ffb347;
+    color: var(--accent);
     font-weight: 600;
 }
 
 .rodape-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    padding-top: 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    font-size: 0.8rem;
-    color: #e3c49d;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
     flex-wrap: wrap;
 }
 
 .social-icons {
     display: flex;
     gap: 14px;
-    font-size: 1.2rem;
-    color: #fff3d9;
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
 }
 
-.social-icons i {
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.social-icons i:hover {
-    color: #ffb347;
-    transform: translateY(-2px);
-    cursor: pointer;
-}
+.social-icons i { transition: transform 0.18s ease, color 0.18s ease }
+.social-icons i:hover { color: var(--accent); transform: translateY(-3px); cursor: pointer }
 
 @media (max-width: 700px) {
     .rodape-bottom {

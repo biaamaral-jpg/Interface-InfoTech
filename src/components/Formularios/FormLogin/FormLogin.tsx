@@ -1,8 +1,9 @@
-import { type JSX, useState } from 'react';
+import React, { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import AuthRequests from '../../../fetch/AuthRequest';
 
-function LoginForm(): JSX.Element {
+function LoginForm(): React.ReactNode {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
@@ -11,17 +12,17 @@ function LoginForm(): JSX.Element {
         senha: string;
     }
 
-    interface FormEvent {
-        preventDefault: () => void;
-    }
-
-    const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const login: LoginData = { email, senha };
         try {
-            if (await AuthRequests.login(login)) {
+            const result = await AuthRequests.login(login);
+            if (result.success) {
                 window.location.href = '/';
+                return;
             }
+            // login falhou -> mostrar mensagem do servidor quando houver
+            alert(`Falha no login: ${result.message || 'e-mail ou senha inválidos, ou servidor indisponível.'}`);
         } catch (error) {
             console.error(`Erro ao tentar fazer login: ${error}`);
             const message = error instanceof Error ? error.message : 'Erro ao fazer login';

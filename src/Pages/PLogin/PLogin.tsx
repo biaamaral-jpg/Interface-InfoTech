@@ -1,6 +1,6 @@
 import { type JSX } from "react";
 
-import Navegacao from "../../components/Navegacao/Nvavegacao";
+import Navegacao from "../../components/Navegacao/Navegacao";
 
 import LoginForm from "../../components/Formularios/FormLogin/FormLogin";
 

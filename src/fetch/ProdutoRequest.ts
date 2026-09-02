@@ -1,80 +1,141 @@
 import type { ProdutoDTO } from "../dto/ProdutoDTO";
 
 class ProdutoRequests {
-    private serverURL: string;
-    private endpointProduto: string;
+
+    private endpoint: string;
 
     constructor() {
-        this.serverURL = import.meta.env.VITE_API_URL || 'http://localhost:3333';
-        this.endpointProduto = import.meta.env.VITE_PRODUCT_ROUTE || '/api/produto';
+        this.endpoint = "http://localhost:3333/api/produtos";
     }
 
-    async obterListaDeProdutos() {
-        try {
-            const token = localStorage.getItem('token');
+    private normalizarProduto(produto: any): ProdutoDTO {
+        return {
+            idProduto: produto.idProduto || produto.id_produto,
+            idCategoria: produto.idCategoria || produto.id_categoria,
+            codigo: produto.codigo,
+            nome: produto.nome,
+            descricao: produto.descricao,
+            preco_unitario: produto.preco_unitario,
+            quantidade_disponivel: produto.quantidade_disponivel,
+            quantidade_minima: produto.quantidade_minima,
+            ativo: produto.ativo,
+            data_cadastro: produto.data_cadastro
+        };
+    }
 
-            const respostaAPI = await fetch(`${this.serverURL}${this.endpointProduto}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': `${token}`
+    async criar(produto: ProdutoDTO) {
+        try {
+
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(
+                this.endpoint,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                    body: JSON.stringify(produto)
                 }
-            });
+            );
 
-            if (respostaAPI.ok) {
-                return await respostaAPI.json();
-            } else {
-                throw new Error("Não foi possível listar os produtos.");
-            }
-        } catch (error) {
-            console.error(`Erro ao fazer a consulta de produtos. ${error}`);
-            return;
-        }
-    }
+            if (!response.ok) {
+                const corpo = await response.text();
+                let mensagem = "Erro ao cadastrar produto.";
 
-    async obterProdutoPorId(id: number) {
-        try {
-            const token = localStorage.getItem('token');
-
-            const respostaAPI = await fetch(`${this.serverURL}${this.endpointProduto}/${id}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': `${token}`
+                if (corpo) {
+                    try {
+                        const dados = JSON.parse(corpo) as {
+                            message?: string;
+                            error?: string;
+                            detail?: string;
+                        };
+                        mensagem = dados.message ?? dados.error ?? dados.detail ?? corpo;
+                    } catch {
+                        mensagem = corpo;
+                    }
                 }
-            });
 
-            if (respostaAPI.ok) {
-                return await respostaAPI.json();
-            } else {
-                throw new Error("Não foi possível buscar o produto.");
+                throw Object.assign(new Error(mensagem), {
+                    status: response.status,
+                });
             }
-        } catch (error) {
-            console.error(`Erro ao buscar produto por ID. ${error}`);
-            return;
-        }
-    }
-
-    async enviarFormularioProduto(formProduto: ProdutoDTO): Promise<boolean> {
-        try {
-            const token = localStorage.getItem('token');
-            const respostaAPI = await fetch(`${this.serverURL}${this.endpointProduto}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': `${token}`
-                },
-                body: JSON.stringify(formProduto)
-            });
-
-            if (!respostaAPI.ok) throw new Error(`Erro ${respostaAPI.status}: ${respostaAPI.statusText}`);
-
-            console.info(`${respostaAPI.status}: ${respostaAPI.statusText}`);
 
             return true;
+
         } catch (error) {
-            console.error(`Erro ao fazer consulta à API. ${error}`);
-            return false;
+            console.error("Erro na requisição de cadastro:", error);
+            throw error;
+        }
+    }
+
+    async listar() {
+        try {
+
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(
+                this.endpoint,
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                }
+            );
+
+            const dados = await response.json();
+            
+            if (Array.isArray(dados)) {
+                return dados.map((produto: any) => this.normalizarProduto(produto));
+            }
+            
+            return [];
+
+        } catch (error) {
+            console.error(error);
+            return [];
+        }
+    }
+    async obterProdutoPorId(id: number) {
+
+        try {
+
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(
+                `${this.endpoint}/${id}`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Content-Type": "application/json",
+                        ...(token
+                            ? {
+                                Authorization: `Bearer ${token}`
+                            }
+                            : {})
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Produto não encontrado.");
+            }
+
+            const dados = await response.json();
+            return this.normalizarProduto(dados);
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao buscar produto por ID:",
+                error
+            );
+
+            throw error;
         }
     }
 }
 
-export default new ProdutoRequests;
+export default new ProdutoRequests();
