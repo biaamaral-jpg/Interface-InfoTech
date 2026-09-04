@@ -78,6 +78,30 @@ class CategoriaRequests {
             return [];
         }
     }
+
+    async obterCategoriaPorId(id: number) {
+        try {
+            const token = localStorage.getItem("token");
+
+            const response = await fetch(`${this.endpoint}/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error("Categoria não encontrada.");
+            }
+
+            const dados = await response.json();
+            return this.normalizarCategoria(dados);
+        } catch (error) {
+            console.error("Erro ao buscar categoria por ID:", error);
+            throw error;
+        }
+    }
 }
 
 export default new CategoriaRequests();
