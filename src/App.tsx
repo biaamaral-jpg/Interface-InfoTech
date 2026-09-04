@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import PHome from './Pages/Phome/PHome'
 import PLogin from './Pages/PLogin/PLogin'
 import PDetalhesProduto from './Pages/PDetalhes/PDetalhesProduto/PDetalhesProduto'
+import PDetalhesMovimentacao from './Pages/PDetalhes/PDetalhesMovimentacao/PDetalhesMovimentacao'
 
 //  Import dos componentes de listagem
 import PListagensProdutos from './components/Listagens/ListagensProduto/ListagemProduto'
@@ -32,6 +33,7 @@ function App() {
 
         {/* Detalhes */}
         <Route path='/detalhes/produto/:id_produto' element={<ProtectedRoute element={<PDetalhesProduto />} />} />
+        <Route path='/detalhes/movimentacao/:id_movimentacao' element={<ProtectedRoute element={<PDetalhesMovimentacao />} />} />
 
         {/* Cadastros */}
         <Route path='/cadastro/produto' element={<ProtectedRoute element={<PCadastroProduto />} />} />
