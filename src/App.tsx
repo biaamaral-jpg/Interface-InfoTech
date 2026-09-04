@@ -7,11 +7,13 @@ import PDetalhesProduto from './Pages/PDetalhes/PDetalhesProduto/PDetalhesProdut
 
 //  Import dos componentes de listagem
 import PListagensProdutos from './components/Listagens/ListagensProduto/ListagemProduto'
+import ListagemMovimentacoes from './components/Listagens/ListagemMovimentacao/ListagemMovimentacao'
 
 import ProtectedRoute from './components/Rotas/ProtectedRoutes'
 
 //  Import dos componentes de cadastro
 import PCadastroProduto from './Pages/PCadastro/PCadastroProduto/PCdastroProduto'
+import PCadastroMovimentacao from './Pages/PCadastro/PCadastroMovimentacao/PCadastroMovimentacao'
 
 
 function App() {
@@ -26,12 +28,14 @@ function App() {
 
         {/* Listagens */}
         <Route path='/lista/produtos' element={<ProtectedRoute element={<PListagensProdutos />} />} />
+        <Route path='/lista/movimentacoes' element={<ProtectedRoute element={<ListagemMovimentacoes />} />} />
 
         {/* Detalhes */}
         <Route path='/detalhes/produto/:id_produto' element={<ProtectedRoute element={<PDetalhesProduto />} />} />
 
         {/* Cadastros */}
         <Route path='/cadastro/produto' element={<ProtectedRoute element={<PCadastroProduto />} />} />
+        <Route path='/cadastro/movimentacao' element={<ProtectedRoute element={<PCadastroMovimentacao />} />} />
       </Routes>
 
     </BrowserRouter>

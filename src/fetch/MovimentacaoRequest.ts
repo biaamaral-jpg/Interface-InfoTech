@@ -5,12 +5,12 @@ class MovimentacaoRequests {
     private endpoint: string;
 
     constructor() {
-        this.endpoint = "http://localhost:3333/api/produtos";
+        this.endpoint = "http://localhost:3333/api/movimentacoes";
     }
 
     private normalizarMovimentacao(movimentacao: any): MovimentacaoDTO {
         return {
-            id_movimentacao: movimentacao.id_movimentacao || movimentacao.id_produto,
+            id_movimentacao: movimentacao.id_movimentacao ?? 0,
             id_produto: movimentacao.id_produto,
             id_movimentacao_origem: movimentacao.id_movimentacao_origem,
             motivo_movimentacao: movimentacao.motivo_movimentacao,
