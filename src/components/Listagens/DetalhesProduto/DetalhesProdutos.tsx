@@ -159,119 +159,156 @@ function DetalhesProduto({
 
     const estoqueBaixo =
         Utilitario.estoqueBaixo(
-            produto.quantidade_disponivel,
-            produto.quantidade_minima
+            Number(produto.quantidade_disponivel ?? 0),
+            Number(produto.quantidade_minima ?? 0)
         );
+
+    const precoUnitario = Number(produto.preco_unitario ?? 0);
+
 
     return (
 
-        <main className="bg-gray-200 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
+        <main className="bg-gradient-to-b from-blue-50 to-gray-100 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
 
-            <div className="w-full max-w-4xl mx-auto">
+            <div className="w-full max-w-5xl mx-auto">
 
-                <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 animate-fade-in">
+                {/* HEADER COM GRADIENTE */}
+                <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-2xl shadow-lg p-6 sm:p-8 text-white animate-fade-in">
+
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+
+                        <div>
+
+                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3">
+
+                                <i className="pi pi-box"></i>
+
+                                {produto.nome}
+
+                            </h1>
+
+                            <p className="text-blue-100 text-sm">
+
+                                Visualizando detalhes completos do produto
+
+                            </p>
+
+                        </div>
+
+                        {/* STATUS BADGE */}
+
+                        <span
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${
+                                produto.ativo
+                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
+                                    : "bg-red-500 text-white shadow-lg shadow-red-500/50"
+                            }`}
+                        >
+
+                            <i className={produto.ativo ? "pi pi-check-circle" : "pi pi-times-circle"}></i>
+
+                            {produto.ativo
+                                ? "Ativo"
+                                : "Inativo"
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div className="bg-white rounded-b-2xl shadow-lg p-5 sm:p-8 animate-fade-in-delayed">
+
+                    <div className="flex flex-col gap-4">
 
 
-                    <div className="flex flex-col gap-3">
 
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        {/* CÓDIGO DO PRODUTO */}
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-gradient-to-r from-sky-50 to-blue-50 p-4 rounded-xl border border-sky-200">
 
                             <div>
+                                <span className="text-xs font-semibold text-sky-600 uppercase tracking-widest block mb-1">
 
-                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
+                                    Código Identificador
 
-                                    {produto.nome}
+                                </span>
 
-                                </h1>
+                                <span className="text-lg font-bold text-sky-900">
 
-                                <p className="text-slate-500 mt-1">
+                                    {produto.codigo}
 
-                                    Detalhes do produto
-
-                                </p>
-
+                                </span>
                             </div>
 
-
-                            {/* STATUS */}
-
-                            <span
-                                className={
-                                    produto.ativo
-                                        ? "inline-flex px-4 py-2 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700"
-                                        : "inline-flex px-4 py-2 rounded-full text-sm font-semibold bg-red-100 text-red-700"
-                                }
+                            <button
+                                onClick={() => {
+                                    navigator.clipboard.writeText(produto.codigo);
+                                    alert("Código copiado!");
+                                }}
+                                className="px-3 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-xs font-bold transition-all"
+                                title="Copiar código"
                             >
 
-                                {produto.ativo
-                                    ? "Produto Ativo"
-                                    : "Produto Inativo"
-                                }
+                                <i className="pi pi-copy mr-1"></i> Copiar
 
-                            </span>
+                            </button>
 
                         </div>
 
-
-                        <div className="border-b border-slate-200 my-4"></div>
-
-
-
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-
-                            <span className="text-sm font-semibold text-slate-500 uppercase tracking-wide">
-
-                                Código do Produto
-
-                            </span>
-
-                            <span className="bg-sky-100 text-sky-700 px-4 py-2 rounded-lg font-semibold">
-
-                                {produto.codigo}
-
-                            </span>
-
-                        </div>
-
-
-                        <div className="border-b border-slate-200 my-4"></div>
+                        <hr className="border-t border-gray-200 my-6" />
 
 
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
 
-                            
-                            <section>
+                            {/* SEÇÃO: INFORMAÇÕES DO PRODUTO */}
 
-                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
+                            <section className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow">
 
-                                    <i className="pi pi-box text-blue-500"></i>
+                                <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2 mb-5">
+
+                                    <i className="pi pi-box text-blue-600 text-xl"></i>
 
                                     Informações do Produto
 
                                 </h2>
 
 
-                                <div className="flex flex-col gap-5 border-l-2 border-blue-100 pl-4">
+                                <div className="flex flex-col gap-6">
 
 
                                     {/* ID */}
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
 
                                             ID do Produto
 
                                         </span>
 
-                                        <span className="text-slate-700 font-medium">
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-lg font-semibold text-slate-900">
 
-                                            {produto.idProduto}
+                                                {produto.idProduto}
 
-                                        </span>
+                                            </span>
 
+                                            <button
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(String(produto.idProduto));
+                                                    alert("ID copiado!");
+                                                }}
+                                                className="p-1 text-blue-600 hover:bg-blue-200 rounded transition-all"
+                                                title="Copiar ID"
+                                            >
+
+                                                <i className="pi pi-copy text-sm"></i>
+
+                                            </button>
+                                        </div>
                                     </div>
 
 
@@ -279,13 +316,13 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
 
                                             Nome
 
                                         </span>
 
-                                        <span className="text-slate-700 font-medium">
+                                        <span className="text-slate-800 font-medium text-base">
 
                                             {produto.nome}
 
@@ -298,18 +335,18 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
 
                                             Descrição
 
                                         </span>
 
-                                        <span className="text-slate-700 font-medium leading-relaxed">
+                                        <p className="text-slate-700 font-medium leading-relaxed text-base bg-white p-3 rounded-lg border border-blue-200">
 
                                             {produto.descricao ||
                                                 "Nenhuma descrição informada."}
 
-                                        </span>
+                                        </p>
 
                                     </div>
 
@@ -318,15 +355,15 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
 
                                             Categoria
 
                                         </span>
 
-                                        <span className="text-slate-700 font-medium">
+                                        <span className="inline-block bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
 
-                                            {produto.idCategoria}
+                                            ID: {produto.idCategoria}
 
                                         </span>
 
@@ -337,7 +374,7 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
 
                                             Data de Cadastro
 
@@ -361,39 +398,43 @@ function DetalhesProduto({
                             </section>
 
 
-                            {/* =================================================
-                                ESTOQUE E VALORES
-                            ================================================= */}
+                            {/* SEÇÃO: ESTOQUE E VALORES */}
 
-                            <section>
+                            <section className="bg-gradient-to-br from-orange-50 to-amber-50 p-6 rounded-xl border-l-4 border-orange-500 shadow-sm hover:shadow-md transition-shadow">
 
-                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
+                                <h2 className="text-lg font-bold text-orange-900 flex items-center gap-2 mb-5">
 
-                                    <i className="pi pi-chart-bar text-orange-500"></i>
+                                    <i className="pi pi-chart-bar text-orange-600 text-xl"></i>
 
                                     Estoque e Valores
 
                                 </h2>
 
 
-                                <div className="flex flex-col gap-5 border-l-2 border-orange-100 pl-4">
+                                <div className="flex flex-col gap-6">
 
 
                                     {/* PREÇO */}
 
-                                    <div>
+                                    <div className="bg-white p-4 rounded-lg border-2 border-emerald-200">
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-1">
 
                                             Preço Unitário
 
                                         </span>
 
-                                        <span className="text-emerald-600 font-bold text-xl">
+                                        <span className="text-emerald-600 font-bold text-2xl">
 
                                             {Utilitario.formatarParaReal(
-                                                produto.preco_unitario
+                                                Number(produto.preco_unitario ?? 0)
                                             )}
+
+                                        </span>
+
+                                        <span className="block text-xs text-emerald-500 mt-1">
+
+                                            Valor unitário de venda
 
                                         </span>
 
@@ -404,23 +445,28 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-2">
 
                                             Quantidade Disponível
 
                                         </span>
 
-                                        <span className="text-slate-700 font-medium">
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-3xl font-bold text-slate-900">
 
-                                            {quantidadeDisponivel}{" "}
+                                                {quantidadeDisponivel}
 
-                                            {quantidadeDisponivel === 1
-                                                ? "unidade"
-                                                : "unidades"
-                                            }
+                                            </span>
 
-                                        </span>
+                                            <span className="text-slate-600 text-sm">
 
+                                                {quantidadeDisponivel === 1
+                                                    ? "unidade"
+                                                    : "unidades"
+                                                }
+
+                                            </span>
+                                        </div>
                                     </div>
 
 
@@ -428,7 +474,7 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-1">
 
                                             Quantidade Mínima
 
@@ -452,51 +498,25 @@ function DetalhesProduto({
 
                                     <div>
 
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
+                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-2">
 
                                             Situação do Estoque
 
                                         </span>
 
                                         <span
-                                            className={
+                                            className={`inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-full text-sm font-semibold ${
                                                 estoqueBaixo
-                                                    ? "inline-flex mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700"
-                                                    : "inline-flex mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700"
-                                            }
+                                                    ? "bg-red-100 text-red-700 border border-red-300"
+                                                    : "bg-emerald-100 text-emerald-700 border border-emerald-300"
+                                            }`}
                                         >
+
+                                            <i className={estoqueBaixo ? "pi pi-exclamation-circle" : "pi pi-check-circle"}></i>
 
                                             {estoqueBaixo
-                                                ? "Estoque baixo"
-                                                : "Estoque normal"
-                                            }
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* STATUS */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Status
-
-                                        </span>
-
-                                        <span
-                                            className={
-                                                produto.ativo
-                                                    ? "inline-flex mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700"
-                                                    : "inline-flex mt-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700"
-                                            }
-                                        >
-
-                                            {produto.ativo
-                                                ? "Ativo"
-                                                : "Inativo"
+                                                ? "Estoque Baixo"
+                                                : "Estoque Normal"
                                             }
 
                                         </span>
@@ -518,7 +538,7 @@ function DetalhesProduto({
                     BOTÕES
                 ================================================= */}
 
-                <div className="w-full mt-6 flex flex-col gap-3">
+                <div className="w-full mt-6 flex flex-col sm:flex-row gap-3">
 
                     <button
                         type="button"
@@ -527,10 +547,10 @@ function DetalhesProduto({
                                 `/atualizar/produto/${produto.idProduto}`
                             )
                         }
-                        className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-md font-bold transition-all shadow-md active:scale-95"
+                        className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
                     >
 
-                        <i className="pi pi-pencil mr-2"></i>
+                        <i className="pi pi-pencil"></i>
 
                         Editar Produto
 
@@ -542,12 +562,12 @@ function DetalhesProduto({
                         onClick={() =>
                             navigate("/lista/produtos")
                         }
-                        className="w-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-4 py-3 rounded-md font-bold transition-all shadow-md active:scale-95"
+                        className="flex-1 bg-white border-2 border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50 px-4 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
                     >
 
-                        <i className="pi pi-arrow-left mr-2"></i>
+                        <i className="pi pi-arrow-left"></i>
 
-                        Voltar
+                        Voltar à Lista
 
                     </button>
 

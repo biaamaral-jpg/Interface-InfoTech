@@ -158,7 +158,7 @@ function ListagemProdutos(): JSX.Element {
                                         <td style={{ padding: '14px 16px', color: '#475569' }}>{produto.idProduto}</td>
                                         <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a' }}>{produto.codigo}</td>
                                         <td style={{ padding: '14px 16px', color: '#0f172a', fontWeight: 600 }}>{produto.nome}</td>
-                                        <td style={{ padding: '14px 16px', color: '#0f172a' }}>{Utilitario.formatarParaReal(produto.preco_unitario)}</td>
+                                        <td style={{ padding: '14px 16px', color: '#0f172a' }}>{Utilitario.formatarParaReal(Number(produto.preco_unitario ?? 0))}</td>
                                         <td style={{ padding: '14px 16px', textAlign: 'center', color: '#475569' }}>{produto.quantidade_disponivel ?? 0}</td>
                                         <td style={{ padding: '14px 16px', textAlign: 'center', color: '#475569' }}>{produto.quantidade_minima}</td>
                                         <td style={{ padding: '14px 16px', textAlign: 'center' }}>

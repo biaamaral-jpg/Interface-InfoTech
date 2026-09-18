@@ -156,53 +156,59 @@ function DetalhesMovimentacao({
 
     return (
 
-        <main className="bg-gray-200 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
+        <main className="bg-gradient-to-b from-green-50 to-gray-100 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
 
-            <div className="w-full max-w-4xl mx-auto">
+            <div className="w-full max-w-5xl mx-auto">
 
-                <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8 animate-fade-in">
+                {/* HEADER COM GRADIENTE */}
+                <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-t-2xl shadow-lg p-6 sm:p-8 text-white animate-fade-in">
 
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-                    <div className="flex flex-col gap-3">
+                        <div>
 
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3">
 
-                            <div>
+                                <i className="pi pi-arrows-h"></i>
 
-                                <h1 className="text-2xl sm:text-3xl font-bold text-slate-800">
+                                {movimentacao.motivo_movimentacao || `Movimentação #${movimentacao.id_movimentacao}`}
 
-                                    {movimentacao.motivo_movimentacao || `Movimentação #${movimentacao.id_movimentacao}`}
+                            </h1>
 
-                                </h1>
+                            <p className="text-green-100 text-sm">
 
-                                <p className="text-slate-500 mt-1">
+                                Visualizando detalhes completos da movimentação
 
-                                    Detalhes da movimentação
-
-                                </p>
-
-                            </div>
-
-
-                            <span
-                                className={
-                                    movimentacao.ativo
-                                        ? "inline-flex px-4 py-2 rounded-full text-sm font-semibold bg-emerald-100 text-emerald-700"
-                                        : "inline-flex px-4 py-2 rounded-full text-sm font-semibold bg-red-100 text-red-700"
-                                }
-                            >
-
-                                {movimentacao.ativo
-                                    ? "Movimentação ativa"
-                                    : "Movimentação inativa"
-                                }
-
-                            </span>
+                            </p>
 
                         </div>
 
+                        {/* STATUS BADGE */}
 
-                        <div className="border-b border-slate-200 my-4"></div>
+                        <span
+                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${
+                                movimentacao.ativo
+                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
+                                    : "bg-red-500 text-white shadow-lg shadow-red-500/50"
+                            }`}
+                        >
+
+                            <i className={movimentacao.ativo ? "pi pi-check-circle" : "pi pi-times-circle"}></i>
+
+                            {movimentacao.ativo
+                                ? "Ativa"
+                                : "Inativa"
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div className="bg-white rounded-b-2xl shadow-lg p-5 sm:p-8 animate-fade-in-delayed">
+
+                    <div className="flex flex-col gap-4">
 
 
 

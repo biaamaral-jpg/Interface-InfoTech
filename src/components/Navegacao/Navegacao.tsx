@@ -187,6 +187,33 @@ function Navegacao(): JSX.Element {
                     )}
 
 
+                    {/* MOVIMENTAÇÕES */}
+
+                    {isAuthenticated && (
+
+                        <li>
+
+                            <button
+                                className="nav-link"
+                                onClick={() =>
+                                    navegar(
+                                        "/lista/movimentacoes"
+                                    )
+                                }
+                                type="button"
+                            >
+
+                                <span>⇄</span>
+
+                                Movimentações
+
+                            </button>
+
+                        </li>
+
+                    )}
+
+
                     {/* ESTOQUE */}
 
                     {isAuthenticated && (
@@ -255,7 +282,7 @@ function Navegacao(): JSX.Element {
                                 }
                                 type="button"
                             >
-                                Sair
+                                Login
                             </button>
 
                         </li>

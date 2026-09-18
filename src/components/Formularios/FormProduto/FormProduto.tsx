@@ -79,16 +79,38 @@ export default function FormProduto({ produtos = [], onSuccess }: FormProdutoPro
       .replace(/R\$\s*/g, "")
       .replace(",", ".");
     const payload = {
-      ...formData,
+      id_produto: 0,
+      idProduto: 0,
+      id_categoria: Number(formData.id_categoria),
       idCategoria: Number(formData.id_categoria),
-      preco_unitario: Number(precoInformado),
+      codigo: String(formData.codigo).trim(),
+      nome: String(formData.nome).trim(),
+      descricao: String(formData.descricao ?? '').trim(),
+      preco_unitario: Number(formData.preco_unitario),
+      precoUnitario: Number(formData.preco_unitario),
+      quantidade: Number(formData.quantidade_disponivel),
       quantidade_disponivel: Number(formData.quantidade_disponivel),
+      quantidadeDisponivel: Number(formData.quantidade_disponivel),
       quantidade_minima: Number(formData.quantidade_minima),
+      quantidadeMinima: Number(formData.quantidade_minima),
+      ativo: Boolean(formData.ativo),
     };
+
+    if (
+      !payload.id_categoria ||
+      !payload.codigo ||
+      !payload.nome ||
+      !Number.isFinite(payload.preco_unitario) ||
+      (!Number.isFinite(payload.quantidade_disponivel) && !Number.isFinite(payload.quantidade)) ||
+      !Number.isFinite(payload.quantidade_minima)
+    ) {
+      setErroTela("Erro ao cadastrar: Campos obrigatórios incompletos. Verifique categoria, código, nome, preço, quantidade disponível e quantidade mínima.");
+      return;
+    }
 
     try {
       console.log("Payload enviado:", payload);
-      const resposta = await ProdutoRequests.criar(payload);
+      const resposta = await ProdutoRequests.criar(payload as any);
       console.log("Resposta do servidor:", resposta);
 
       if (!resposta) {

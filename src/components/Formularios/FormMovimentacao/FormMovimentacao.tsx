@@ -87,14 +87,21 @@ export default function FormMovimentacao({ movimentacoes = [], onSuccess }: Form
 
 		const payload = {
 			id_produto: Number(formData.id_produto),
+			idProduto: Number(formData.id_produto),
 			id_movimentacao_origem: formData.id_movimentacao_origem ? Number(formData.id_movimentacao_origem) : undefined,
+			idMovimentacaoOrigem: formData.id_movimentacao_origem ? Number(formData.id_movimentacao_origem) : undefined,
 			motivo_movimentacao: formData.motivo_movimentacao,
+			motivoMovimentacao: formData.motivo_movimentacao,
 			tipo_movimentacao: formData.tipo_movimentacao,
+			tipoMovimentacao: formData.tipo_movimentacao,
 			quantidade: Number(formData.quantidade),
 			preco_unitario: Number(formData.preco_unitario) || 0,
+			precoUnitario: Number(formData.preco_unitario) || 0,
 			valor_total: calcularValorTotal,
+			valorTotal: calcularValorTotal,
 			observacao: formData.observacao,
 			data_movimentacao: formData.data_movimentacao,
+			dataMovimentacao: formData.data_movimentacao,
 			ativo: formData.ativo,
 		};
 

@@ -58,6 +58,30 @@ function PHome(): JSX.Element {
                     </article>
 
                     <article className="dashboard-card dashboard-card-secondary">
+                        <div className="dashboard-icon">◇</div>
+                        <div className="dashboard-content">
+                            <span className="dashboard-badge">Categorias</span>
+                            <h3>Organizar produtos</h3>
+                            <p>Crie e mantenha as categorias do catálogo para facilitar a gestão de estoque.</p>
+                        </div>
+                        <Link to={isAuthenticated ? '/cadastro/categoria' : '/login'} className="dashboard-cta">
+                            {isAuthenticated ? 'Gerenciar categorias' : 'Faça login'}
+                        </Link>
+                    </article>
+
+                    <article className="dashboard-card dashboard-card-tall">
+                        <div className="dashboard-icon">⇄</div>
+                        <div className="dashboard-content">
+                            <span className="dashboard-badge">Movimentações</span>
+                            <h3>Registrar entradas e saídas</h3>
+                            <p>Acompanhe compras, vendas e ajustes de estoque com histórico e controle.</p>
+                        </div>
+                        <Link to={isAuthenticated ? '/cadastro/movimentacao' : '/login'} className="dashboard-cta">
+                            {isAuthenticated ? 'Registrar movimento' : 'Acessar sistema'}
+                        </Link>
+                    </article>
+
+                    <article className="dashboard-card dashboard-card-secondary">
                         <div className="dashboard-icon">✎</div>
                         <div className="dashboard-content">
                             <span className="dashboard-badge">Gestão</span>
@@ -117,8 +141,8 @@ function PHome(): JSX.Element {
                                                             <span>{produto.descricao || 'Sem descrição'}</span>
                                                         </div>
                                                     </td>
-                                                    <td>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(produto.preco_unitario)}</td>
-                                                    <td>{produto.quantidade_disponivel}</td>
+                                                    <td>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(produto.preco_unitario ?? 0))}</td>
+                                                    <td>{Number(produto.quantidade_disponivel ?? 0)}</td>
                                                     <td>
                                                         <span className={produto.ativo ? 'status-badge active' : 'status-badge inactive'}>
                                                             {produto.ativo ? 'Ativo' : 'Inativo'}
