@@ -168,440 +168,181 @@ function DetalhesProduto({
 
     return (
 
-        <main className="bg-gradient-to-b from-blue-50 to-gray-100 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
+        <main style={{
+            flex: 1,
+            padding: '32px 20px 40px',
+            background: 'radial-gradient(circle at top, #eff6ff 0%, #e0f2fe 30%, #f8fafc 100%)',
+            overflowY: 'auto'
+        }}>
 
-            <div className="w-full max-w-5xl mx-auto">
+            <div style={{ width: '100%', maxWidth: 1200, margin: '0 auto' }}>
 
-                {/* HEADER COM GRADIENTE */}
-                <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-t-2xl shadow-lg p-6 sm:p-8 text-white animate-fade-in">
+                <div style={{
+                    borderRadius: 28,
+                    overflow: 'hidden',
+                    boxShadow: '0 24px 70px rgba(59, 130, 246, 0.18)',
+                    border: '1px solid rgba(147, 197, 253, 0.7)',
+                    background: '#fff'
+                }}>
 
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div style={{
+                        background: 'linear-gradient(90deg, #1d4ed8 0%, #2563eb 40%, #4338ca 100%)',
+                        color: '#fff',
+                        padding: '32px 28px'
+                    }}>
 
-                        <div>
-
-                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3">
-
-                                <i className="pi pi-box"></i>
-
-                                {produto.nome}
-
-                            </h1>
-
-                            <p className="text-blue-100 text-sm">
-
-                                Visualizando detalhes completos do produto
-
-                            </p>
-
-                        </div>
-
-                        {/* STATUS BADGE */}
-
-                        <span
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${
-                                produto.ativo
-                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
-                                    : "bg-red-500 text-white shadow-lg shadow-red-500/50"
-                            }`}
-                        >
-
-                            <i className={produto.ativo ? "pi pi-check-circle" : "pi pi-times-circle"}></i>
-
-                            {produto.ativo
-                                ? "Ativo"
-                                : "Inativo"
-                            }
-
-                        </span>
-
-                    </div>
-
-                </div>
-
-                <div className="bg-white rounded-b-2xl shadow-lg p-5 sm:p-8 animate-fade-in-delayed">
-
-                    <div className="flex flex-col gap-4">
-
-
-
-                        {/* CÓDIGO DO PRODUTO */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-gradient-to-r from-sky-50 to-blue-50 p-4 rounded-xl border border-sky-200">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
 
                             <div>
-                                <span className="text-xs font-semibold text-sky-600 uppercase tracking-widest block mb-1">
-
-                                    Código Identificador
-
-                                </span>
-
-                                <span className="text-lg font-bold text-sky-900">
-
-                                    {produto.codigo}
-
-                                </span>
+                                <p style={{ margin: 0, fontSize: 12, fontWeight: 800, letterSpacing: '0.24em', textTransform: 'uppercase', opacity: 0.9 }}>Produto</p>
+                                <h1 style={{ margin: '10px 0 0', display: 'flex', alignItems: 'center', gap: 14, fontSize: 'clamp(2rem, 3vw, 3rem)', fontWeight: 900 }}>
+                                    <span style={{
+                                        display: 'inline-flex',
+                                        width: 52,
+                                        height: 52,
+                                        borderRadius: 16,
+                                        background: 'rgba(255,255,255,0.12)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.15)'
+                                    }}>
+                                        <i className="pi pi-box" style={{ fontSize: 22 }}></i>
+                                    </span>
+                                    {produto.nome}
+                                </h1>
                             </div>
 
-                            <button
-                                onClick={() => {
-                                    navigator.clipboard.writeText(produto.codigo);
-                                    alert("Código copiado!");
-                                }}
-                                className="px-3 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-xs font-bold transition-all"
-                                title="Copiar código"
-                            >
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    borderRadius: 999,
+                                    border: '1px solid rgba(255,255,255,0.22)',
+                                    background: 'rgba(255,255,255,0.12)',
+                                    padding: '0.7rem 1rem',
+                                    fontSize: 14,
+                                    fontWeight: 700
+                                }}>
+                                    <i className="pi pi-calendar"></i>
+                                    {produto.data_cadastro ? Utilitario.formatarData(produto.data_cadastro) : 'Sem data'}
+                                </span>
 
-                                <i className="pi pi-copy mr-1"></i> Copiar
-
-                            </button>
-
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    borderRadius: 999,
+                                    padding: '0.7rem 1rem',
+                                    fontSize: 14,
+                                    fontWeight: 800,
+                                    background: produto.ativo ? '#22c55e' : '#ef4444',
+                                    color: '#fff',
+                                    boxShadow: produto.ativo ? '0 10px 20px rgba(34,197,94,0.35)' : '0 10px 20px rgba(239,68,68,0.3)'
+                                }}>
+                                    <i className={produto.ativo ? 'pi pi-check-circle' : 'pi pi-times-circle'}></i>
+                                    {produto.ativo ? 'Ativo' : 'Inativo'}
+                                </span>
+                            </div>
                         </div>
-
-                        <hr className="border-t border-gray-200 my-6" />
-
-
-
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-
-                            {/* SEÇÃO: INFORMAÇÕES DO PRODUTO */}
-
-                            <section className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow">
-
-                                <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2 mb-5">
-
-                                    <i className="pi pi-box text-blue-600 text-xl"></i>
-
-                                    Informações do Produto
-
-                                </h2>
-
-
-                                <div className="flex flex-col gap-6">
-
-
-                                    {/* ID */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
-
-                                            ID do Produto
-
-                                        </span>
-
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-lg font-semibold text-slate-900">
-
-                                                {produto.idProduto}
-
-                                            </span>
-
-                                            <button
-                                                onClick={() => {
-                                                    navigator.clipboard.writeText(String(produto.idProduto));
-                                                    alert("ID copiado!");
-                                                }}
-                                                className="p-1 text-blue-600 hover:bg-blue-200 rounded transition-all"
-                                                title="Copiar ID"
-                                            >
-
-                                                <i className="pi pi-copy text-sm"></i>
-
-                                            </button>
-                                        </div>
-                                    </div>
-
-
-                                    {/* NOME */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
-
-                                            Nome
-
-                                        </span>
-
-                                        <span className="text-slate-800 font-medium text-base">
-
-                                            {produto.nome}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* DESCRIÇÃO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
-
-                                            Descrição
-
-                                        </span>
-
-                                        <p className="text-slate-700 font-medium leading-relaxed text-base bg-white p-3 rounded-lg border border-blue-200">
-
-                                            {produto.descricao ||
-                                                "Nenhuma descrição informada."}
-
-                                        </p>
-
-                                    </div>
-
-
-                                    {/* CATEGORIA */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
-
-                                            Categoria
-
-                                        </span>
-
-                                        <span className="inline-block bg-blue-200 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-
-                                            ID: {produto.idCategoria}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* DATA */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-blue-600 font-bold tracking-wider mb-1">
-
-                                            Data de Cadastro
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {produto.data_cadastro
-                                                ? Utilitario.formatarData(
-                                                    produto.data_cadastro
-                                                )
-                                                : "Não informada"
-                                            }
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </section>
-
-
-                            {/* SEÇÃO: ESTOQUE E VALORES */}
-
-                            <section className="bg-gradient-to-br from-orange-50 to-amber-50 p-6 rounded-xl border-l-4 border-orange-500 shadow-sm hover:shadow-md transition-shadow">
-
-                                <h2 className="text-lg font-bold text-orange-900 flex items-center gap-2 mb-5">
-
-                                    <i className="pi pi-chart-bar text-orange-600 text-xl"></i>
-
-                                    Estoque e Valores
-
-                                </h2>
-
-
-                                <div className="flex flex-col gap-6">
-
-
-                                    {/* PREÇO */}
-
-                                    <div className="bg-white p-4 rounded-lg border-2 border-emerald-200">
-
-                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-1">
-
-                                            Preço Unitário
-
-                                        </span>
-
-                                        <span className="text-emerald-600 font-bold text-2xl">
-
-                                            {Utilitario.formatarParaReal(
-                                                Number(produto.preco_unitario ?? 0)
-                                            )}
-
-                                        </span>
-
-                                        <span className="block text-xs text-emerald-500 mt-1">
-
-                                            Valor unitário de venda
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* QUANTIDADE */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-2">
-
-                                            Quantidade Disponível
-
-                                        </span>
-
-                                        <div className="flex items-baseline gap-2">
-                                            <span className="text-3xl font-bold text-slate-900">
-
-                                                {quantidadeDisponivel}
-
-                                            </span>
-
-                                            <span className="text-slate-600 text-sm">
-
-                                                {quantidadeDisponivel === 1
-                                                    ? "unidade"
-                                                    : "unidades"
-                                                }
-
-                                            </span>
-                                        </div>
-                                    </div>
-
-
-                                    {/* MÍNIMO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-1">
-
-                                            Quantidade Mínima
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {produto.quantidade_minima}{" "}
-
-                                            {produto.quantidade_minima === 1
-                                                ? "unidade"
-                                                : "unidades"
-                                            }
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* SITUAÇÃO ESTOQUE */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-orange-600 font-bold tracking-wider mb-2">
-
-                                            Situação do Estoque
-
-                                        </span>
-
-                                        <span
-                                            className={`inline-flex items-center gap-2 mt-1 px-4 py-2 rounded-full text-sm font-semibold ${
-                                                estoqueBaixo
-                                                    ? "bg-red-100 text-red-700 border border-red-300"
-                                                    : "bg-emerald-100 text-emerald-700 border border-emerald-300"
-                                            }`}
-                                        >
-
-                                            <i className={estoqueBaixo ? "pi pi-exclamation-circle" : "pi pi-check-circle"}></i>
-
-                                            {estoqueBaixo
-                                                ? "Estoque Baixo"
-                                                : "Estoque Normal"
-                                            }
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </section>
-
-                        </div>
-
                     </div>
 
+                    <div style={{ padding: '28px' }}>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 18, marginBottom: 26 }}>
+                            <div style={{ borderRadius: 20, border: '1px solid #dbeafe', background: '#eff6ff', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#1d4ed8' }}>Código</p>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12 }}>
+                                    <span style={{ fontSize: 18, fontWeight: 800, color: '#0f172a' }}>{produto.codigo}</span>
+                                    <button type="button" onClick={() => { navigator.clipboard.writeText(produto.codigo); alert('Código copiado!'); }} style={{ border: 'none', borderRadius: 12, background: '#dbeafe', color: '#1d4ed8', padding: '10px', cursor: 'pointer' }} title="Copiar código">
+                                        <i className="pi pi-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style={{ borderRadius: 20, border: '1px solid #e2e8f0', background: '#f8fafc', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b' }}>ID</p>
+                                <div style={{ marginTop: 12, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>#{produto.idProduto}</div>
+                            </div>
+
+                            <div style={{ borderRadius: 20, border: '1px solid #bbf7d0', background: '#ecfdf5', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#15803d' }}>Preço</p>
+                                <div style={{ marginTop: 12, fontSize: 22, fontWeight: 800, color: '#166534' }}>{Utilitario.formatarParaReal(Number(produto.preco_unitario ?? 0))}</div>
+                            </div>
+
+                            <div style={{ borderRadius: 20, border: '1px solid #fef3c7', background: '#fffbeb', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#b45309' }}>Estoque</p>
+                                <div style={{ marginTop: 12, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>{quantidadeDisponivel}</div>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 0.8fr', gap: 22 }}>
+                            <section style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 24, padding: 24 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+                                    <div style={{ width: 42, height: 42, borderRadius: 14, background: '#dbeafe', color: '#1d4ed8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <i className="pi pi-info-circle"></i>
+                                    </div>
+                                    <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>Informações do produto</h2>
+                                </div>
+
+                                <div style={{ display: 'grid', gap: 16 }}>
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Descrição</span>
+                                        <p style={{ margin: 0, color: '#334155', lineHeight: 1.7 }}>{produto.descricao || 'Nenhuma descrição informada.'}</p>
+                                    </div>
+
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16 }}>
+                                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                            <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Categoria</span>
+                                            <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, background: '#dbeafe', color: '#1d4ed8', padding: '0.4rem 0.8rem', fontWeight: 700 }}>ID: {produto.idCategoria}</span>
+                                        </div>
+
+                                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                            <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Quantidade mínima</span>
+                                            <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{produto.quantidade_minima} {produto.quantidade_minima === 1 ? 'unidade' : 'unidades'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <aside style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fffbeb 100%)', border: '1px solid #fed7aa', borderRadius: 24, padding: 24 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+                                    <div style={{ width: 42, height: 42, borderRadius: 14, background: '#f59e0b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(245, 158, 11, 0.25)' }}>
+                                        <i className="pi pi-chart-bar"></i>
+                                    </div>
+                                    <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>Estoque e valor</h2>
+                                </div>
+
+                                <div style={{ display: 'grid', gap: 16 }}>
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Status do estoque</p>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, borderRadius: 999, padding: '0.45rem 0.8rem', fontWeight: 700, background: estoqueBaixo ? '#fee2e2' : '#dcfce7', color: estoqueBaixo ? '#991b1b' : '#166534' }}>
+                                            <i className={estoqueBaixo ? 'pi pi-exclamation-circle' : 'pi pi-check-circle'}></i>
+                                            {estoqueBaixo ? 'Estoque baixo' : 'Estoque normal'}
+                                        </span>
+                                    </div>
+
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Preço unitário</p>
+                                        <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#0f172a' }}>{Utilitario.formatarParaReal(Number(produto.preco_unitario ?? 0))}</p>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
                 </div>
 
-
-                {/* =================================================
-                    BOTÕES
-                ================================================= */}
-
-                <div className="w-full mt-6 flex flex-col sm:flex-row gap-3">
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate(
-                                `/atualizar/produto/${produto.idProduto}`
-                            )
-                        }
-                        className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
-                    >
-
-                        <i className="pi pi-pencil"></i>
-
+                <div style={{ width: '100%', marginTop: 22, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <button type="button" onClick={() => navigate(`/atualizar/produto/${produto.idProduto}`)} style={{ flex: 1, minWidth: 200, border: 'none', borderRadius: 18, background: 'linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%)', color: '#fff', padding: '0.95rem 1.2rem', fontWeight: 800, cursor: 'pointer', boxShadow: '0 16px 30px rgba(37,99,235,0.25)' }}>
+                        <i className="pi pi-pencil" style={{ marginRight: 8 }}></i>
                         Editar Produto
-
                     </button>
-
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate("/lista/produtos")
-                        }
-                        className="flex-1 bg-white border-2 border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-50 px-4 py-3 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-95 flex items-center justify-center gap-2"
-                    >
-
-                        <i className="pi pi-arrow-left"></i>
-
+                    <button type="button" onClick={() => navigate('/lista/produtos')} style={{ flex: 1, minWidth: 200, border: '1px solid #cbd5e1', borderRadius: 18, background: '#fff', color: '#334155', padding: '0.95rem 1.2rem', fontWeight: 800, cursor: 'pointer' }}>
+                        <i className="pi pi-arrow-left" style={{ marginRight: 8 }}></i>
                         Voltar à Lista
-
                     </button>
-
                 </div>
-
             </div>
-
-
-            {/* =================================================
-                ANIMAÇÃO
-            ================================================= */}
-
-            <style>{`
-
-                .animate-fade-in {
-                    animation: fadeIn 0.5s ease-out;
-                }
-
-                @keyframes fadeIn {
-
-                    from {
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-
-                }
-
-            `}</style>
-
         </main>
     );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect, type JSX } from "react";
 import Navegacao from "../../../components/Navegacao/Navegacao";
 import Rodape from "../../../components/Rodape/Rodape";
 import FormCategoria from "../../../components/Formularios/FormCategoria/FormCategoria";
+import { API_URL } from '../../../config/api';
 
 // Interface para tipar os produtos listados
 interface IProduto {
@@ -18,7 +19,7 @@ function PCadastroCategoria(): JSX.Element {
   // Função para buscar a lista atualizada do backend
   const carregarCategorias = async () => {
     try {
-      const resposta = await fetch("http://localhost:3333/api/categorias");
+      const resposta = await fetch(`${API_URL}/api/categorias`);
       if (resposta.ok) {
         const dados = await resposta.json();
         setCategorias(dados);

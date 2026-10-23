@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import type MovimentacaoDTO  from "../dto/MovimentacaoDTO";
 
 class MovimentacaoRequests {
@@ -6,10 +7,10 @@ class MovimentacaoRequests {
 
     constructor() {
         this.endpoints = [
-            "http://localhost:3333/api/movimentacoes",
-            "http://localhost:3333/api/movimentacao",
-            "http://localhost:3333/movimentacoes",
-            "http://localhost:3333/movimentacao"
+            `${API_URL}/api/movimentacoes`,
+            `${API_URL}/api/movimentacao`,
+            `${API_URL}/movimentacoes`,
+            `${API_URL}/movimentacao`
         ];
     }
 

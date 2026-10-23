@@ -1,3 +1,4 @@
+import { API_URL } from '../../config/api';
 import { type JSX } from "react";
 
 import Navegacao from "../../components/Navegacao/Navegacao";

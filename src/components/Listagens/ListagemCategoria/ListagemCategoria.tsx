@@ -140,50 +140,54 @@ function ListagemCategorias(): JSX.Element {
 
                         <tbody>
                             {currentCategorias.length > 0 ? (
-                                currentCategorias.map((categoria) => (
-                                    <tr key={categoria.id_categoria} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                                        <td style={{ padding: '14px 16px', color: '#475569' }}>{categoria.id_categoria}</td>
-                                        <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a' }}>{categoria.nome}</td>
-                                        <td style={{ padding: '14px 16px', color: '#0f172a' }}>{categoria.descricao ?? "-"}</td>
-                                        <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                                            <span style={{
-                                                display: 'inline-flex',
-                                                padding: '6px 10px',
-                                                borderRadius: 999,
-                                                fontWeight: 700,
-                                                fontSize: '0.72rem',
-                                                background: categoria.ativo ? '#dcfce7' : '#fee2e2',
-                                                color: categoria.ativo ? '#166534' : '#991b1b'
-                                            }}>
-                                                {Utilitario.formatarStatus(categoria.ativo)}
-                                            </span>
-                                        </td>
-                                        <td style={{ padding: '14px 16px', textAlign: 'center' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => navigate(`/detalhes/categoria/${categoria.id_categoria}`)}
-                                                    style={{ background: '#dbeafe', color: '#1d4ed8', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
-                                                >
-                                                    Detalhes
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => navigate(`/editar/categoria/${categoria.id_categoria}`)}
-                                                    style={{ background: '#dcfce7', color: '#166534', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
-                                                >
-                                                    Atualizar
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    style={{ background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
-                                                >
-                                                    Deletar
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
+                                currentCategorias.map((categoria, index) => {
+                                    const categoriaId = categoria.id_categoria ?? categoria.idCategoria ?? index + 1;
+
+                                    return (
+                                        <tr key={categoriaId} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                                            <td style={{ padding: '14px 16px', color: '#475569' }}>{categoriaId}</td>
+                                            <td style={{ padding: '14px 16px', fontWeight: 600, color: '#0f172a' }}>{categoria.nome}</td>
+                                            <td style={{ padding: '14px 16px', color: '#0f172a' }}>{categoria.descricao ?? "-"}</td>
+                                            <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                                <span style={{
+                                                    display: 'inline-flex',
+                                                    padding: '6px 10px',
+                                                    borderRadius: 999,
+                                                    fontWeight: 700,
+                                                    fontSize: '0.72rem',
+                                                    background: categoria.ativo ? '#dcfce7' : '#fee2e2',
+                                                    color: categoria.ativo ? '#166534' : '#991b1b'
+                                                }}>
+                                                    {Utilitario.formatarStatus(categoria.ativo)}
+                                                </span>
+                                            </td>
+                                            <td style={{ padding: '14px 16px', textAlign: 'center' }}>
+                                                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => navigate(`/detalhes/categoria/${categoriaId}`)}
+                                                        style={{ background: '#dbeafe', color: '#1d4ed8', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
+                                                    >
+                                                        Detalhes
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => navigate(`/editar/categoria/${categoriaId}`)}
+                                                        style={{ background: '#dcfce7', color: '#166534', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
+                                                    >
+                                                        Atualizar
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        style={{ background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: 8, padding: '0.5rem 0.7rem', fontWeight: 700, cursor: 'pointer' }}
+                                                    >
+                                                        Deletar
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                             ) : (
                                 <tr>
                                     <td colSpan={5} style={{ padding: '28px 16px', textAlign: 'center', color: '#64748b', fontStyle: 'italic' }}>

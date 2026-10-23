@@ -2,6 +2,7 @@ import { useState, useEffect, type JSX } from "react";
 import Navegacao from "../../../components/Navegacao/Navegacao";
 import Rodape from "../../../components/Rodape/Rodape";
 import FormProduto from "../../../components/Formularios/FormProduto/FormProduto";
+import { API_URL } from '../../../config/api';
 
 // Interface para tipar os produtos listados
 interface IProduto {
@@ -22,7 +23,7 @@ function PCadastroProduto(): JSX.Element {
   // Função para buscar a lista atualizada do backend
   const carregarProdutos = async () => {
     try {
-      const resposta = await fetch("http://localhost:3333/api/produtos");
+      const resposta = await fetch(`${API_URL}/api/produtos`);
       if (resposta.ok) {
         const dados = await resposta.json();
         setProdutos(dados);

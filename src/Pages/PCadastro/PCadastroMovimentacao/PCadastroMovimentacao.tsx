@@ -2,6 +2,7 @@ import { useState, useEffect, type JSX } from "react";
 import Navegacao from "../../../components/Navegacao/Navegacao";
 import Rodape from "../../../components/Rodape/Rodape";
 import FormMovimentacao from "../../../components/Formularios/FormMovimentacao/FormMovimentacao";
+import { API_URL } from '../../../config/api';
 
 // Interface para tipar as movimentações
 interface IMovimentacao {
@@ -24,7 +25,7 @@ function PCadastroMovimentacao(): JSX.Element {
   // Função para buscar a lista atualizada do backend
   const carregarMovimentacoes = async () => {
     try {
-      const resposta = await fetch("http://localhost:3333/api/movimentacoes");
+      const resposta = await fetch(`${API_URL}/api/movimentacoes`);
       if (resposta.ok) {
         const dados = await resposta.json();
         setMovimentacoes(dados);

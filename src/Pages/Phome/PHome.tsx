@@ -7,6 +7,7 @@ import Rodape from "../../components/Rodape/Rodape";
 import AuthRequests from "../../fetch/AuthRequest";
 import ProdutoRequests from "../../fetch/ProdutoRequest";
 import type { ProdutoDTO } from "../../dto/ProdutoDTO";
+import { API_URL } from '../../config/api';
 
 function PHome(): JSX.Element {
     const [produtos, setProdutos] = useState<ProdutoDTO[]>([]);

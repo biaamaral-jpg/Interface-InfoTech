@@ -155,367 +155,174 @@ function DetalhesMovimentacao({
 
 
     return (
+        <main style={{
+            flex: 1,
+            padding: '32px 20px 40px',
+            background: 'radial-gradient(circle at top, #ecfdf5 0%, #dcfce7 28%, #f8fafc 100%)',
+            overflowY: 'auto'
+        }}>
+            <div style={{ width: '100%', maxWidth: 1200, margin: '0 auto' }}>
+                <div style={{
+                    borderRadius: 28,
+                    overflow: 'hidden',
+                    boxShadow: '0 24px 70px rgba(16, 185, 129, 0.18)',
+                    border: '1px solid rgba(110, 231, 183, 0.7)',
+                    background: '#fff'
+                }}>
+                    <div style={{
+                        background: 'linear-gradient(90deg, #047857 0%, #16a34a 40%, #0f766e 100%)',
+                        color: '#fff',
+                        padding: '32px 28px'
+                    }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
+                            <div>
+                                <p style={{ margin: 0, fontSize: 12, fontWeight: 800, letterSpacing: '0.24em', textTransform: 'uppercase', opacity: 0.9 }}>Movimentação</p>
+                                <h1 style={{ margin: '10px 0 0', display: 'flex', alignItems: 'center', gap: 14, fontSize: 'clamp(2rem, 3vw, 3rem)', fontWeight: 900 }}>
+                                    <span style={{
+                                        display: 'inline-flex',
+                                        width: 52,
+                                        height: 52,
+                                        borderRadius: 16,
+                                        background: 'rgba(255,255,255,0.12)',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.15)'
+                                    }}>
+                                        <i className="pi pi-arrows-h" style={{ fontSize: 22 }}></i>
+                                    </span>
+                                    {movimentacao.motivo_movimentacao || `Movimentação #${movimentacao.id_movimentacao}`}
+                                </h1>
+                            </div>
 
-        <main className="bg-gradient-to-b from-green-50 to-gray-100 flex-1 py-6 sm:py-10 px-4 overflow-y-auto">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    borderRadius: 999,
+                                    border: '1px solid rgba(255,255,255,0.22)',
+                                    background: 'rgba(255,255,255,0.12)',
+                                    padding: '0.7rem 1rem',
+                                    fontSize: 14,
+                                    fontWeight: 700
+                                }}>
+                                    <i className="pi pi-calendar"></i>
+                                    {movimentacao.data_movimentacao ? Utilitario.formatarData(movimentacao.data_movimentacao) : 'Sem data'}
+                                </span>
 
-            <div className="w-full max-w-5xl mx-auto">
-
-                {/* HEADER COM GRADIENTE */}
-                <div className="bg-gradient-to-r from-green-600 to-emerald-700 rounded-t-2xl shadow-lg p-6 sm:p-8 text-white animate-fade-in">
-
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-
-                        <div>
-
-                            <h1 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center gap-3">
-
-                                <i className="pi pi-arrows-h"></i>
-
-                                {movimentacao.motivo_movimentacao || `Movimentação #${movimentacao.id_movimentacao}`}
-
-                            </h1>
-
-                            <p className="text-green-100 text-sm">
-
-                                Visualizando detalhes completos da movimentação
-
-                            </p>
-
+                                <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: 8,
+                                    borderRadius: 999,
+                                    padding: '0.7rem 1rem',
+                                    fontSize: 14,
+                                    fontWeight: 800,
+                                    background: movimentacao.ativo ? '#22c55e' : '#ef4444',
+                                    color: '#fff',
+                                    boxShadow: movimentacao.ativo ? '0 10px 20px rgba(34,197,94,0.35)' : '0 10px 20px rgba(239,68,68,0.3)'
+                                }}>
+                                    <i className={movimentacao.ativo ? 'pi pi-check-circle' : 'pi pi-times-circle'}></i>
+                                    {movimentacao.ativo ? 'Ativa' : 'Inativa'}
+                                </span>
+                            </div>
                         </div>
-
-                        {/* STATUS BADGE */}
-
-                        <span
-                            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${
-                                movimentacao.ativo
-                                    ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
-                                    : "bg-red-500 text-white shadow-lg shadow-red-500/50"
-                            }`}
-                        >
-
-                            <i className={movimentacao.ativo ? "pi pi-check-circle" : "pi pi-times-circle"}></i>
-
-                            {movimentacao.ativo
-                                ? "Ativa"
-                                : "Inativa"
-                            }
-
-                        </span>
-
                     </div>
 
-                </div>
-
-                <div className="bg-white rounded-b-2xl shadow-lg p-5 sm:p-8 animate-fade-in-delayed">
-
-                    <div className="flex flex-col gap-4">
-
-
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
-
-                            <section>
-
-                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
-
-                                    <i className="pi pi-arrows-h text-blue-500"></i>
-
-                                    Informações da Movimentação
-
-                                </h2>
-
-
-                                <div className="flex flex-col gap-5 border-l-2 border-blue-100 pl-4">
-
-
-                                    {/* ID */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            ID da Movimentação
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.id_movimentacao}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* PRODUTO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Produto
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.id_produto}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* TIPO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Tipo
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.tipo_movimentacao}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* MOTIVO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Motivo
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.motivo_movimentacao || "Não informado"}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* ORIGEM */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Origem
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.id_movimentacao_origem ?? "Sem origem"}
-
-                                        </span>
-
-                                    </div>
-
+                    <div style={{ padding: '28px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 18, marginBottom: 26 }}>
+                            <div style={{ borderRadius: 20, border: '1px solid #d1fae5', background: '#ecfdf5', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#047857' }}>ID</p>
+                                <div style={{ marginTop: 12, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>#{movimentacao.id_movimentacao}</div>
+                            </div>
+
+                            <div style={{ borderRadius: 20, border: '1px solid #e2e8f0', background: '#f8fafc', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b' }}>Produto</p>
+                                <div style={{ marginTop: 12, fontSize: 20, fontWeight: 800, color: '#0f172a' }}>{movimentacao.id_produto}</div>
+                            </div>
+
+                            <div style={{ borderRadius: 20, border: '1px solid #cffafe', background: '#ecfeff', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#0f766e' }}>Tipo</p>
+                                <div style={{ marginTop: 12 }}>
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', borderRadius: 999, background: '#cffafe', color: '#0f766e', padding: '0.4rem 0.8rem', fontWeight: 700 }}>{movimentacao.tipo_movimentacao}</span>
                                 </div>
+                            </div>
 
-                            </section>
-
-
-                            <section>
-
-                                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2 mb-5">
-
-                                    <i className="pi pi-chart-bar text-orange-500"></i>
-
-                                    Quantidade e Valor
-
-                                </h2>
-
-
-                                <div className="flex flex-col gap-5 border-l-2 border-orange-100 pl-4">
-
-
-                                    {/* QUANTIDADE */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Quantidade
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.quantidade}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* PREÇO UNITÁRIO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Preço Unitário
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {Utilitario.formatarParaReal(movimentacao.preco_unitario ?? 0)}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* VALOR TOTAL */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Valor Total
-
-                                        </span>
-
-                                        <span className="text-emerald-600 font-bold text-xl">
-
-                                            {Utilitario.formatarParaReal(movimentacao.valor_total ?? 0)}
-
-                                        </span>
-
-                                    </div>
-
-
-                                    {/* DATA DA MOVIMENTAÇÃO */}
-
-                                    <div>
-
-                                        <span className="block text-xs uppercase text-gray-400 font-bold tracking-wider">
-
-                                            Data da Movimentação
-
-                                        </span>
-
-                                        <span className="text-slate-700 font-medium">
-
-                                            {movimentacao.data_movimentacao
-                                                ? Utilitario.formatarData(movimentacao.data_movimentacao)
-                                                : "Não informada"
-                                            }
-
-                                        </span>
-
-                                    </div>
-
-                                </div>
-
-                            </section>
-
+                            <div style={{ borderRadius: 20, border: '1px solid #fed7aa', background: '#fff7ed', padding: '18px 16px' }}>
+                                <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#c2410c' }}>Valor total</p>
+                                <div style={{ marginTop: 12, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>{Utilitario.formatarParaReal(movimentacao.valor_total ?? 0)}</div>
+                            </div>
                         </div>
 
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 0.8fr', gap: 22 }}>
+                            <section style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 24, padding: 24 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+                                    <div style={{ width: 42, height: 42, borderRadius: 14, background: '#d1fae5', color: '#047857', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <i className="pi pi-info-circle"></i>
+                                    </div>
+                                    <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>Informações da movimentação</h2>
+                                </div>
 
-                        <div className="mt-6">
+                                <div style={{ display: 'grid', gap: 16 }}>
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Motivo</span>
+                                        <p style={{ margin: 0, color: '#334155', lineHeight: 1.7 }}>{movimentacao.motivo_movimentacao || 'Não informado'}</p>
+                                    </div>
 
-                            <h2 className="text-lg font-bold text-slate-800 mb-3">
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 16 }}>
+                                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                            <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Origem</span>
+                                            <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{movimentacao.id_movimentacao_origem ?? 'Sem origem'}</span>
+                                        </div>
 
-                                Observação
+                                        <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                            <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Quantidade</span>
+                                            <span style={{ fontSize: 15, fontWeight: 700, color: '#0f172a' }}>{movimentacao.quantidade} unidade(s)</span>
+                                        </div>
+                                    </div>
 
-                            </h2>
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <span style={{ display: 'block', fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Observação</span>
+                                        <p style={{ margin: 0, color: '#334155', lineHeight: 1.7 }}>{movimentacao.observacao || 'Nenhuma observação informada.'}</p>
+                                    </div>
+                                </div>
+                            </section>
 
-                            <p className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-slate-700">
+                            <aside style={{ background: 'linear-gradient(135deg, #fff7ed 0%, #ffffff 50%, #fffbeb 100%)', border: '1px solid #fed7aa', borderRadius: 24, padding: 24 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18 }}>
+                                    <div style={{ width: 42, height: 42, borderRadius: 14, background: '#f59e0b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(245, 158, 11, 0.25)' }}>
+                                        <i className="pi pi-chart-line"></i>
+                                    </div>
+                                    <h2 style={{ margin: 0, fontSize: 22, fontWeight: 800, color: '#0f172a' }}>Valores</h2>
+                                </div>
 
-                                {movimentacao.observacao || "Nenhuma observação informada."}
+                                <div style={{ display: 'grid', gap: 16 }}>
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Valor total</p>
+                                        <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#0f172a' }}>{Utilitario.formatarParaReal(movimentacao.valor_total ?? 0)}</p>
+                                    </div>
 
-                            </p>
-
+                                    <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 18, padding: 18 }}>
+                                        <p style={{ margin: 0, fontSize: 11, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#64748b', marginBottom: 10 }}>Preço unitário</p>
+                                        <p style={{ margin: 0, fontSize: 20, fontWeight: 800, color: '#0f172a' }}>{Utilitario.formatarParaReal(movimentacao.preco_unitario ?? 0)}</p>
+                                    </div>
+                                </div>
+                            </aside>
                         </div>
-
                     </div>
-
                 </div>
 
-
-                {/* =================================================
-                    BOTÕES
-                ================================================= */}
-
-                <div className="w-full mt-6 flex flex-col gap-3">
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate(
-                                `/atualizar/movimentacao/${movimentacao.id_movimentacao}`
-                            )
-                        }
-                        className="w-full bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-md font-bold transition-all shadow-md active:scale-95"
-                    >
-
-                        <i className="pi pi-pencil mr-2"></i>
-
+                <div style={{ width: '100%', marginTop: 22, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                    <button type="button" onClick={() => navigate(`/atualizar/movimentacao/${movimentacao.id_movimentacao}`)} style={{ flex: 1, minWidth: 200, border: 'none', borderRadius: 18, background: 'linear-gradient(90deg, #059669 0%, #0f766e 100%)', color: '#fff', padding: '0.95rem 1.2rem', fontWeight: 800, cursor: 'pointer', boxShadow: '0 16px 30px rgba(5,150,105,0.25)' }}>
+                        <i className="pi pi-pencil" style={{ marginRight: 8 }}></i>
                         Editar Movimentação
-
                     </button>
-
-
-                    <button
-                        type="button"
-                        onClick={() =>
-                            navigate("/lista/movimentacoes")
-                        }
-                        className="w-full bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 px-4 py-3 rounded-md font-bold transition-all shadow-md active:scale-95"
-                    >
-
-                        <i className="pi pi-arrow-left mr-2"></i>
-
-                        Voltar
-
+                    <button type="button" onClick={() => navigate('/lista/movimentacoes')} style={{ flex: 1, minWidth: 200, border: '1px solid #cbd5e1', borderRadius: 18, background: '#fff', color: '#334155', padding: '0.95rem 1.2rem', fontWeight: 800, cursor: 'pointer' }}>
+                        <i className="pi pi-arrow-left" style={{ marginRight: 8 }}></i>
+                        Voltar à Lista
                     </button>
-
                 </div>
-
             </div>
-
-
-            {/* =================================================
-                ANIMAÇÃO
-            ================================================= */}
-
-            <style>{`
-
-                .animate-fade-in {
-                    animation: fadeIn 0.5s ease-out;
-                }
-
-                @keyframes fadeIn {
-
-                    from {
-                        opacity: 0;
-                        transform: translateY(10px);
-                    }
-
-                    to {
-                        opacity: 1;
-                        transform: translateY(0);
-                    }
-
-                }
-
-            `}</style>
-
         </main>
     );
 }

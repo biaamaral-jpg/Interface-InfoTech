@@ -1,3 +1,4 @@
+import { API_URL } from '../config/api';
 import type { ProdutoDTO } from "../dto/ProdutoDTO";
 
 class ProdutoRequests {
@@ -5,7 +6,7 @@ class ProdutoRequests {
     private endpoint: string;
 
     constructor() {
-        this.endpoint = "http://localhost:3333/api/produtos";
+        this.endpoint = `${API_URL}/api/produtos`;
     }
 
     private normalizarProduto(produto: any): ProdutoDTO {
