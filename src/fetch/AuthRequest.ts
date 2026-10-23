@@ -21,7 +21,6 @@ class AuthRequests {
     private getLoginEndpoints(): string[] {
         return [
             `${this.serverUrl}${this.endpointLogin}`,
-            `${this.serverUrl}/auth/login`,
             `${this.serverUrl}/login`
         ];
     }
@@ -30,25 +29,18 @@ class AuthRequests {
         const email = String(login?.email ?? '').trim();
         const senha = String(login?.senha ?? '').trim();
 
-        if (!email && !senha) {
+        if (!email || !senha) {
             return [];
         }
 
-        const payloads: Array<Record<string, string>> = [
+        return [
             { email, senha },
             { email, password: senha },
             { login: email, senha },
             { login: email, password: senha },
             { username: email, senha },
             { username: email, password: senha },
-            { email, pass: senha }
         ];
-
-        return payloads.filter((payload) => {
-            const hasEmail = Boolean(payload.email || payload.login || payload.username);
-            const hasPassword = Boolean(payload.senha || payload.password || payload.pass);
-            return hasEmail && hasPassword;
-        });
     }
 
     /**
@@ -57,13 +49,17 @@ class AuthRequests {
      * @returns **true** caso sucesso, **false** caso erro
      */
     async login(login: { email: string, senha: string}): Promise<{ success: boolean, message?: string }> {
-        let ultimoErro: unknown = null;
-
         const endpoints = this.getLoginEndpoints();
         const payloads = this.getLoginPayloads(login);
 
+        if (payloads.length === 0) {
+            return { success: false, message: 'Informe e-mail e senha.' };
+        }
+
+        let ultimoErro: unknown = null;
+
         for (const url of endpoints) {
-            for (const payload of payloads.length ? payloads : [{ email: String(login?.email ?? '').trim(), senha: String(login?.senha ?? '').trim() }]) {
+            for (const payload of payloads) {
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -72,11 +68,6 @@ class AuthRequests {
                         },
                         body: JSON.stringify(payload)
                     });
-
-                    if (response.status === 404) {
-                        ultimoErro = new Error(`Rota não encontrada em ${url}`);
-                        continue;
-                    }
 
                     let data: any = null;
                     try {
@@ -115,21 +106,37 @@ class AuthRequests {
                         return { success: true, message: messageFromServer || 'Login realizado com sucesso' };
                     }
 
-                    if (!response.ok) {
-                        const msg = data?.message || data?.error || `HTTP ${response.status}`;
-                        ultimoErro = new Error(msg);
+                    if (response.status === 404) {
+                        ultimoErro = new Error(`Rota não encontrada em ${url}`);
                         continue;
                     }
 
-                    return { success: false, message: messageFromServer || data?.error || 'Credenciais inválidas' };
+                    if (response.status === 401 || response.status === 400) {
+                        ultimoErro = new Error(messageFromServer || data?.error || `HTTP ${response.status}`);
+                        continue;
+                    }
+
+                    ultimoErro = new Error(messageFromServer || data?.error || `HTTP ${response.status}`);
+                    break;
                 } catch (error) {
                     ultimoErro = error;
                 }
             }
+
+            if (ultimoErro instanceof Error && /Rota não encontrada/i.test(ultimoErro.message)) {
+                continue;
+            }
+
+            if (ultimoErro instanceof Error && /HTTP 401|HTTP 400|E-mail|Email|senha|Credenciais/i.test(ultimoErro.message)) {
+                continue;
+            }
+
+            if (ultimoErro) {
+                break;
+            }
         }
 
-        console.error('Erro: ', ultimoErro);
-        const message = ultimoErro instanceof Error ? ultimoErro.message : String(ultimoErro ?? 'Erro ao fazer login');
+        const message = ultimoErro instanceof Error ? ultimoErro.message : 'Erro ao fazer login';
         return { success: false, message };
     }
 
