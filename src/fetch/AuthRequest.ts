@@ -26,6 +26,31 @@ class AuthRequests {
         ];
     }
 
+    private getLoginPayloads(login: { email: string, senha: string }): Array<Record<string, string>> {
+        const email = String(login?.email ?? '').trim();
+        const senha = String(login?.senha ?? '').trim();
+
+        if (!email && !senha) {
+            return [];
+        }
+
+        const payloads: Array<Record<string, string>> = [
+            { email, senha },
+            { email, password: senha },
+            { login: email, senha },
+            { login: email, password: senha },
+            { username: email, senha },
+            { username: email, password: senha },
+            { email, pass: senha }
+        ];
+
+        return payloads.filter((payload) => {
+            const hasEmail = Boolean(payload.email || payload.login || payload.username);
+            const hasPassword = Boolean(payload.senha || payload.password || payload.pass);
+            return hasEmail && hasPassword;
+        });
+    }
+
     /**
      * Realiza a autenticação no servidor
      * @param {*} login - email e senha
@@ -34,66 +59,72 @@ class AuthRequests {
     async login(login: { email: string, senha: string}): Promise<{ success: boolean, message?: string }> {
         let ultimoErro: unknown = null;
 
-        for (const url of this.getLoginEndpoints()) {
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(login)
-                });
+        const endpoints = this.getLoginEndpoints();
+        const payloads = this.getLoginPayloads(login);
 
-                if (response.status === 404) {
-                    ultimoErro = new Error(`Rota não encontrada em ${url}`);
-                    continue;
-                }
-
-                let data: any = null;
+        for (const url of endpoints) {
+            for (const payload of payloads.length ? payloads : [{ email: String(login?.email ?? '').trim(), senha: String(login?.senha ?? '').trim() }]) {
                 try {
-                    data = await response.json();
-                } catch {
-                    data = null;
-                }
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
 
-                if (!response.ok) {
-                    const msg = data?.message || data?.error || `HTTP ${response.status}`;
-                    console.log('Erro na autenticação', data);
-                    return { success: false, message: msg };
-                }
-
-                const messageFromServer = typeof data?.message === 'string' ? data.message : undefined;
-                const tokenFromServer = data?.token || data?.access_token || data?.jwt || null;
-                const usuarioFromServer = data?.usuario || data?.user || data?.cliente || data?.usuarioLogado || null;
-                const authFlag = data?.auth ?? data?.authenticated ?? data?.isAuth ?? null;
-
-                const isAuth = (
-                    authFlag === true ||
-                    authFlag === 'true' ||
-                    Boolean(tokenFromServer) ||
-                    (messageFromServer ? /sucesso|login realizado/i.test(messageFromServer) : false)
-                );
-
-                if (isAuth) {
-                    const usuario = usuarioFromServer || {
-                        id_usuario: data?.id_usuario ?? data?.idUsuario ?? 0,
-                        nome: data?.nome || data?.name || 'Usuário',
-                        email: data?.email || login.email,
-                        role: data?.role || 'user'
-                    };
-
-                    if (tokenFromServer) {
-                        this.persistToken(tokenFromServer, usuario, true);
-                    } else if (typeof authFlag === 'boolean' || authFlag === 'true') {
-                        this.persistToken('token-temporario', usuario, true);
+                    if (response.status === 404) {
+                        ultimoErro = new Error(`Rota não encontrada em ${url}`);
+                        continue;
                     }
 
-                    return { success: true, message: messageFromServer || 'Login realizado com sucesso' };
-                }
+                    let data: any = null;
+                    try {
+                        data = await response.json();
+                    } catch {
+                        data = null;
+                    }
 
-                return { success: false, message: messageFromServer || data?.error || 'Credenciais inválidas' };
-            } catch (error) {
-                ultimoErro = error;
+                    const messageFromServer = typeof data?.message === 'string' ? data.message : undefined;
+                    const tokenFromServer = data?.token || data?.access_token || data?.jwt || null;
+                    const usuarioFromServer = data?.usuario || data?.user || data?.cliente || data?.usuarioLogado || null;
+                    const authFlag = data?.auth ?? data?.authenticated ?? data?.isAuth ?? null;
+
+                    const isAuth = (
+                        response.ok ||
+                        authFlag === true ||
+                        authFlag === 'true' ||
+                        Boolean(tokenFromServer) ||
+                        (messageFromServer ? /sucesso|login realizado|autenticado|ok/i.test(messageFromServer) : false)
+                    );
+
+                    if (isAuth) {
+                        const usuario = usuarioFromServer || {
+                            id_usuario: data?.id_usuario ?? data?.idUsuario ?? 0,
+                            nome: data?.nome || data?.name || 'Usuário',
+                            email: data?.email || payload.email || payload.login || payload.username || login.email,
+                            role: data?.role || 'user'
+                        };
+
+                        if (tokenFromServer) {
+                            this.persistToken(tokenFromServer, usuario, true);
+                        } else if (typeof authFlag === 'boolean' || authFlag === 'true' || response.ok) {
+                            this.persistToken('token-temporario', usuario, true);
+                        }
+
+                        return { success: true, message: messageFromServer || 'Login realizado com sucesso' };
+                    }
+
+                    if (!response.ok) {
+                        const msg = data?.message || data?.error || `HTTP ${response.status}`;
+                        ultimoErro = new Error(msg);
+                        continue;
+                    }
+
+                    return { success: false, message: messageFromServer || data?.error || 'Credenciais inválidas' };
+                } catch (error) {
+                    ultimoErro = error;
+                }
             }
         }
 
@@ -109,7 +140,7 @@ class AuthRequests {
      * @param {*} isAuth - estado da autenticação do usuário
      */
     persistToken(token: string, usuario: {id_usuario?: number, nome?: string, email?: string, role?: string}, isAuth: boolean) {
-        const idUsuario = usuario.id_usuario ?? usuario.id_usuario ?? 0;
+        const idUsuario = usuario.id_usuario ?? 0;
         const nome = usuario.nome || 'Usuário';
         const email = usuario.email || '';
         const role = usuario.role || 'user';
